@@ -63,7 +63,101 @@ const createClass = async (req, res) => {
 
 
 
+const getClassById = async (req, res) => {
+  try {
+    const classId = req.params.id;
+
+    const db = await connectDB();
+
+    const [data] = await db.query(
+      "SELECT * FROM classes WHERE id=?",
+      [classId]
+    );
+
+    if (data.length === 0) {
+      return res.status(404).send({
+        success: false,
+        message: "Class Not Found",
+      });
+    }
+
+    res.status(200).send({
+      success: true,
+      class: data[0],
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).send({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+const updateClass = async (req, res) => {
+  try {
+    const classId = req.params.id;
+
+    const { class_name, teacher_id } = req.body;
+
+    const db = await connectDB();
+
+    await db.query(
+      "UPDATE classes SET class_name=?, teacher_id=? WHERE id=?",
+      [class_name, teacher_id, classId]
+    );
+
+    res.status(200).send({
+      success: true,
+      message: "Class Updated Successfully",
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).send({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+const deleteClass = async (req, res) => {
+  try {
+    const classId = req.params.id;
+
+    const db = await connectDB();
+
+    await db.query(
+      "DELETE FROM classes WHERE id=?",
+      [classId]
+    );
+
+    res.status(200).send({
+      success: true,
+      message: "Class Deleted Successfully",
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).send({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+
 module.exports = {
   getClasses,
   createClass,
+  getClassById,
+  updateClass,
+  deleteClass,
 };
