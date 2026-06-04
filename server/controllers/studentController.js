@@ -57,6 +57,7 @@ const createStudent = async (req, res) => {
   }
 };
 
+
 const getStudentById = async (req, res) => {
   try {
     const studentId = req.params.id;
@@ -90,8 +91,67 @@ const getStudentById = async (req, res) => {
   }
 };
 
+
+const updateStudent = async (req, res) => {
+  try {
+    const studentId = req.params.id;
+
+    const { name, email, class_id } = req.body;
+
+    const db = await connectDB();
+
+    await db.query(
+      "UPDATE students SET name=?, email=?, class_id=? WHERE id=?",
+      [name, email, class_id, studentId]
+    );
+
+    res.status(200).send({
+      success: true,
+      message: "Student Updated Successfully",
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).send({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+const deleteStudent = async (req, res) => {
+  try {
+    const studentId = req.params.id;
+
+    const db = await connectDB();
+
+    await db.query(
+      "DELETE FROM students WHERE id=?",
+      [studentId]
+    );
+
+    res.status(200).send({
+      success: true,
+      message: "Student Deleted Successfully",
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).send({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
 module.exports = {
   getStudents,
   createStudent,
   getStudentById,
+  updateStudent,
+  deleteStudent,
 };
