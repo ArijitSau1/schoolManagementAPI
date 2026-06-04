@@ -21,6 +21,13 @@ app.use(
   require("./routes/teacherRoutes")
 );
 
+
+app.use(
+  "/api/v1/class",
+  require("./routes/classRoutes")
+);
+
+
 app.get("/", (req, res) => {
   res.send("School Management System API");
 });
@@ -36,3 +43,6 @@ connectDB()
   .catch((error) => {
     console.log(error);
   });
+
+
+  
