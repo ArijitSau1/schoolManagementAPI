@@ -153,6 +153,36 @@ const deleteClass = async (req, res) => {
 };
 
 
+const assignTeacherToClass = async (req, res) => {
+  try {
+    const classId = req.params.id;
+
+    const { teacher_id } = req.body;
+
+    const db = await connectDB();
+
+    await db.query(
+      "UPDATE classes SET teacher_id=? WHERE id=?",
+      [teacher_id, classId]
+    );
+
+    res.status(200).send({
+      success: true,
+      message: "Teacher Assigned Successfully",
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).send({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+
 
 module.exports = {
   getClasses,
@@ -160,4 +190,5 @@ module.exports = {
   getClassById,
   updateClass,
   deleteClass,
+  assignTeacherToClass,
 };
