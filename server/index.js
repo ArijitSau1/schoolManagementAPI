@@ -8,6 +8,13 @@ const app = express();
 
 app.use(express.json());
 
+
+// Student Routes
+app.use(
+  "/api/v1/student",
+  require("./routes/studentRoutes")
+);
+
 app.get("/", (req, res) => {
   res.send("School Management System API");
 });
