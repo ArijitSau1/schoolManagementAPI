@@ -57,7 +57,41 @@ const createStudent = async (req, res) => {
   }
 };
 
+const getStudentById = async (req, res) => {
+  try {
+    const studentId = req.params.id;
+
+    const db = await connectDB();
+
+    const [data] = await db.query(
+      "SELECT * FROM students WHERE id = ?",
+      [studentId]
+    );
+
+    if (data.length === 0) {
+      return res.status(404).send({
+        success: false,
+        message: "Student Not Found",
+      });
+    }
+
+    res.status(200).send({
+      success: true,
+      student: data[0],
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).send({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   getStudents,
   createStudent,
+  getStudentById,
 };
