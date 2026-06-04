@@ -9,10 +9,16 @@ const app = express();
 app.use(express.json());
 
 
-// Student Routes
+
 app.use(
   "/api/v1/student",
   require("./routes/studentRoutes")
+);
+
+
+app.use(
+  "/api/v1/teacher",
+  require("./routes/teacherRoutes")
 );
 
 app.get("/", (req, res) => {
