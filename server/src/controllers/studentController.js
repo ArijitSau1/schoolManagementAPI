@@ -1,27 +1,5 @@
 const connectDB = require("../config/db");
 
-const getStudents = async (req, res) => {
-  try {
-    const db = await connectDB();
-
-    const [data] = await db.query(
-      "SELECT * FROM students"
-    );
-
-    res.status(200).send({
-      success: true,
-      data,
-    });
-
-  } catch (error) {
-    console.log(error);
-
-    res.status(500).send({
-      success: false,
-      message: error.message,
-    });
-  }
-};
 
 const createStudent = async (req, res) => {
   try {
@@ -56,6 +34,46 @@ const createStudent = async (req, res) => {
     });
   }
 };
+
+
+const getStudents = async (req, res) => {
+  try {
+
+    const search = req.query.search || "";
+
+    const page = parseInt(req.query.page) || 1;
+
+    const limit = parseInt(req.query.limit) || 5;
+
+    const offset = (page - 1) * limit;
+
+    const db = await connectDB();
+
+    const [data] = await db.query(
+      `SELECT * FROM students
+       WHERE name LIKE ?
+       LIMIT ? OFFSET ?`,
+      [`%${search}%`, limit, offset]
+    );
+
+    res.status(200).send({
+      success: true,
+      page,
+      limit,
+      totalRecords: data.length,
+      data,
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).send({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 
 
 const getStudentById = async (req, res) => {
