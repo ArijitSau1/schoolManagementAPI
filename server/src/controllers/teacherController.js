@@ -3,14 +3,29 @@ const connectDB = require("../config/db");
 
 const getTeacher = async (req, res) => {
   try {
+
+    const search = req.query.search || "";
+
+    const page = parseInt(req.query.page) || 1;
+
+    const limit = parseInt(req.query.limit) || 5;
+
+    const offset = (page - 1) * limit;
+
     const db = await connectDB();
 
     const [data] = await db.query(
-      "SELECT * FROM teachers"
+      `SELECT * FROM teachers
+       WHERE name LIKE ?
+       LIMIT ? OFFSET ?`,
+      [`%${search}%`, limit, offset]
     );
 
     res.status(200).send({
       success: true,
+      page,
+      limit,
+      totalRecords: data.length,
       data,
     });
 

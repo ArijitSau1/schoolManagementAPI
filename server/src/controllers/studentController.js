@@ -139,6 +139,9 @@ const updateStudent = async (req, res) => {
 };
 
 
+
+
+
 const deleteStudent = async (req, res) => {
   try {
     const studentId = req.params.id;
