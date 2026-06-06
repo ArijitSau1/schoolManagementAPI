@@ -28,6 +28,12 @@ app.use(
 );
 
 
+app.use(
+  "/api/v1/auth",
+  require("./routes/authRoutes")
+);
+
+
 app.get("/", (req, res) => {
   res.send("School Management System API");
 });
@@ -45,4 +51,3 @@ connectDB()
   });
 
 
-  

@@ -1,22 +1,27 @@
 const connectDB = require("../config/db");
 
+const bcrypt = require("bcryptjs");
+
+
 
 const createStudent = async (req, res) => {
   try {
-    const { name, email, class_id } = req.body;
+    const { name, email, password, class_id } = req.body;
 
-    if (!name || !email) {
+    if (!name || !email || !password) {
       return res.status(400).send({
         success: false,
-        message: "Please provide name and email",
+        message: "Please provide name, email and password",
       });
     }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const db = await connectDB();
 
     const [data] = await db.query(
-      "INSERT INTO students(name,email,class_id) VALUES(?,?,?)",
-      [name, email, class_id || null]
+      "INSERT INTO students(name,email,password,class_id) VALUES(?,?,?,?)",
+      [name, email, hashedPassword, class_id || null]
     );
 
     res.status(201).send({
@@ -34,6 +39,8 @@ const createStudent = async (req, res) => {
     });
   }
 };
+
+
 
 
 const getStudents = async (req, res) => {
